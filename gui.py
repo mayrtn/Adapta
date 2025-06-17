@@ -1,5 +1,19 @@
 #Archivo de interfaz construida con customtkinter
 import customtkinter as ctk
+from models import AdaptadorDislexia
+
+# Funciones
+def adaptar_texto():
+    texto_original = entrada_texto.get("1.0", "end").strip()
+    if texto_original:
+        adaptador = AdaptadorDislexia(texto_original)
+        texto_adaptado = adaptador.adaptar()
+        salida_texto.delete("1.0", "end")
+        salida_texto.insert("1.0", texto_adaptado)
+
+def borrar_todo():
+    entrada_texto.delete("1.0", "end")
+    salida_texto.delete("1.0", "end")
 
 # Tema y colores 
 ctk.set_appearance_mode("system")
@@ -28,11 +42,22 @@ entrada_texto.pack(fill="x", pady=(0, 10)) #centra en x y da margenes
 contenedor_botones = ctk.CTkFrame(contenedor_principal, fg_color="transparent")
 contenedor_botones.pack(fill="x", pady=(0, 10))
 
-#botones
-boton_adaptar = ctk.CTkButton(contenedor_botones, text="Adaptar", fg_color="#28b463", hover_color="#239b56", text_color="white", height=60, width=300 )
+#botón Adaptar
+boton_adaptar = ctk.CTkButton(
+    contenedor_botones, text="Adaptar",
+    fg_color="#28b463", hover_color="#239b56",
+    text_color="white", height=60, width=300,
+    command=adaptar_texto  # <-- conectado
+)
 boton_adaptar.pack(side="right", padx=(0, 10))
 
-boton_borrar = ctk.CTkButton(contenedor_botones, text="Borrar todo", fg_color="#3a3c3d", hover_color="#313233", text_color="white", height=60, width=250)
+#botón Borrar
+boton_borrar = ctk.CTkButton(
+    contenedor_botones, text="Borrar todo",
+    fg_color="#3a3c3d", hover_color="#313233",
+    text_color="white", height=60, width=250,
+    command=borrar_todo  # <-- conectado
+)
 boton_borrar.pack(side="right", padx=(0, 5))
 
 #salida_texto
