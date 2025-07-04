@@ -1,5 +1,7 @@
-from gui import App
+from gui import app
+
+def main():
+    app.mainloop()
 
 if __name__ == "__main__":
-    app = App()
-    app.mainloop()
+    main()

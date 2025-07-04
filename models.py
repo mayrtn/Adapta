@@ -13,12 +13,41 @@ nltk.download('stopwords')
 translator = Translator()
 diccionario_silabas = pyphen.Pyphen(lang='es')
 
-#varible global lista de conectores, se inicia desde el main, unas sola vez cuando se inicia el programa
-lista_conectores = []
+#FUNCION GLOBAL
+#Genera una lista de conectores usando stopwords con pos tags de NLTK en ingles y luego traduciendolos al español
+def generar_lista_conectores():
+    
+    # Obtener stopwords en inglés y taggearlas para luego poder filtrar resultados con esos POS tags
+    stopwords_ingles = stopwords.words('english')
+    palabras_etiquetadas = pos_tag(stopwords_ingles)
 
-def set_lista_conectores(nueva_lista):
-    global lista_conectores  # le digo a Python que quiero modificar la variable global
-    lista_conectores = nueva_lista
+    etiquetas_conectores = {'CC', 'IN', 'RB', 'UH', 'RP', 'WRB'}
+
+    conectores_ingles = []
+
+    for palabra, etiqueta in palabras_etiquetadas:
+        if etiqueta in etiquetas_conectores:
+            conectores_ingles.append(palabra)
+
+    # Traducir conectores al español 
+    conectores_espanol = []
+
+    for conector in conectores_ingles:
+        try:
+            traduccion = translator.translate(conector, src='en', dest='es')
+            if traduccion is not None and traduccion.text is not None and len(traduccion.text.strip()) > 0:
+                traducciones = traduccion.text.split(',')
+                for t in traducciones:
+                    palabra_traducida = t.strip().lower()
+                    if palabra_traducida != '':
+                        conectores_espanol.append(palabra_traducida)
+        except Exception:
+            # En caso de error con alguna palabra por no tener traduccion la ignoramos
+            continue
+
+    return conectores_espanol
+
+lista_conectores = generar_lista_conectores()
 
 
 #decorador depuracion por consola
